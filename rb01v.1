@@ -1,0 +1,177 @@
+
+Private Sub CommandButton1_Click() ' Inserir
+    Dim ws As Worksheet
+    Dim lastRow As Long
+    Dim searchValue As String
+    Dim foundCell As Range
+
+    ' Definir a planilha onde serão inseridos os dados
+    Set ws = ThisWorkbook.Sheets("Planilha1")
+
+    ' Verificar se o valor já existe na coluna A
+    searchValue = TextBox1.Value
+    Set foundCell = ws.Columns(1).Find(What:=searchValue, LookIn:=xlValues, LookAt:=xlWhole)
+
+    If foundCell Is Nothing Then ' Se o valor não existe, inserir os dados
+        lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row + 1
+
+        ' Inserir dados nas células
+        ws.Cells(lastRow, 1).Value = TextBox1.Value
+        ws.Cells(lastRow, 2).Value = TextBox2.Value
+        ws.Cells(lastRow, 3).Value = TextBox3.Value
+        ws.Cells(lastRow, 4).Value = TextBox4.Value
+        ws.Cells(lastRow, 5).Value = TextBox5.Value
+        ws.Cells(lastRow, 6).Value = TextBox6.Value
+        ws.Cells(lastRow, 7).Value = TextBox7.Value
+        ws.Cells(lastRow, 8).Value = TextBox8.Value
+        ws.Cells(lastRow, 9).Value = TextBox9.Value
+        ws.Cells(lastRow, 10).Value = TextBox10.Value
+
+        ' Limpar as TextBoxes
+        LimparTextBoxes
+
+        MsgBox "Dados inseridos com sucesso!", vbInformation
+    Else
+        MsgBox "O valor já existe na planilha.", vbExclamation
+    End If
+End Sub
+
+Private Sub CommandButton2_Click() ' Consultar
+    Dim ws As Worksheet
+    Dim searchValue As String
+    Dim foundCell As Range
+
+    ' Definir a planilha onde serão consultados os dados
+    Set ws = ThisWorkbook.Sheets("Planilha1")
+
+    ' Verificar se o valor existe na coluna A
+    searchValue = TextBox1.Value
+    Set foundCell = ws.Columns(1).Find(What:=searchValue, LookIn:=xlValues, LookAt:=xlWhole)
+
+    If Not foundCell Is Nothing Then ' Se o valor existe, exibir os dados
+        Dim rowIndex As Long
+        rowIndex = foundCell.Row
+
+        ' Exibir os dados correspondentes nas TextBoxes
+        TextBox2.Value = ws.Cells(rowIndex, 2).Value
+        TextBox3.Value = ws.Cells(rowIndex, 3).Value
+        TextBox4.Value = ws.Cells(rowIndex, 4).Value
+        TextBox5.Value = ws.Cells(rowIndex, 5).Value
+        TextBox6.Value = ws.Cells(rowIndex, 6).Value
+        TextBox7.Value = ws.Cells(rowIndex, 7).Value
+        TextBox8.Value = ws.Cells(rowIndex, 8).Value
+        TextBox9.Value = ws.Cells(rowIndex, 9).Value
+        TextBox10.Value = ws.Cells(rowIndex, 10).Value
+    Else
+        MsgBox "Número não encontrado.", vbExclamation
+    End If
+End Sub
+
+Private Sub CommandButton3_Click() ' Alterar
+    Dim ws As Worksheet
+    Dim searchValue As String
+    Dim foundCell As Range
+
+    ' Definir a planilha onde serão consultados e alterados os dados
+    Set ws = ThisWorkbook.Sheets("Planilha1")
+
+    ' Verificar se o valor existe na coluna A
+    searchValue = TextBox1.Value
+    Set foundCell = ws.Columns(1).Find(What:=searchValue, LookIn:=xlValues, LookAt:=xlWhole)
+
+    If Not foundCell Is Nothing Then ' Se o valor existe, alterar os dados
+        Dim rowIndex As Long
+        rowIndex = foundCell.Row
+
+        ' Alterar os dados nas células correspondentes
+        ws.Cells(rowIndex, 2).Value = TextBox2.Value
+        ws.Cells(rowIndex, 3).Value = TextBox3.Value
+        ws.Cells(rowIndex, 4).Value = TextBox4.Value
+        ws.Cells(rowIndex, 5).Value = TextBox5.Value
+        ws.Cells(rowIndex, 6).Value = TextBox6.Value
+        ws.Cells(rowIndex, 7).Value = TextBox7.Value
+        ws.Cells(rowIndex, 8).Value = TextBox8.Value
+        ws.Cells(rowIndex, 9).Value = TextBox9.Value
+        ws.Cells(rowIndex, 10).Value = TextBox10.Value
+        
+        ' Inserir novos dados se TextBox11 e TextBox12 estiverem preenchidas
+        If TextBox11.Value <> "" And TextBox12.Value <> "" Then
+            ' Inserir novos dados nas últimas colunas da linha consultada
+            ws.Cells(rowIndex, 11).Value = TextBox11.Value
+            ws.Cells(rowIndex, 12).Value = TextBox12.Value
+            
+            ' Limpar TextBoxes 11 e 12 após a inserção
+            TextBox11.Value = ""
+            TextBox12.Value = ""
+        End If
+
+        ' Limpar as TextBoxes
+        LimparTextBoxes
+
+        MsgBox "Dados alterados com sucesso!", vbInformation
+    Else
+        MsgBox "Número não encontrado.", vbExclamation
+    End If
+End Sub
+
+
+
+Private Sub LimparTextBoxes()
+    ' Limpar todas as TextBoxes
+    Dim ctrl As Control
+    For Each ctrl In Me.Controls
+        If TypeName(ctrl) = "TextBox" Then
+            ctrl.Value = ""
+        End If
+    Next ctrl
+End Sub
+
+
+Private Sub CommandButton4_Click()
+
+End Sub
+
+
+
+
+'Para associar um botão de controle (ActiveX ou Formulário) a uma macro que exibe o UserForm, siga estas etapas:
+Usando um Botão de Controle ActiveX:
+
+    Na guia "Desenvolvedor", clique em "Inserir" no grupo "Controles" e escolha o botão de comando (ActiveX) na seção "Controles ActiveX".
+    Desenhe o botão na planilha.
+    Clique com o botão direito no botão e selecione "Propriedades".
+    Na janela de propriedades, encontre a propriedade "Nome" e atribua um nome significativo ao botão, por exemplo, "btnAbrirUserForm".
+    Clique duas vezes no botão para abrir o Editor do VBA.
+    No Editor do VBA, você verá um esqueleto de código, inclua o seguinte código para chamar seu UserForm:
+
+vba
+
+Private Sub btnAbrirUserForm_Click()
+    ' Exibir o UserForm ao clicar no botão
+    SeuUserForm.Show
+End Sub
+
+'--------------------------------------------------------------------------------------------------------------------------------------------
+
+'codigo botão
+Substitua "SeuUserForm" pelo nome real do seu UserForm.
+Usando um Botão de Controle de Formulário:
+
+    Na guia "Desenvolvedor", clique em "Inserir" no grupo "Controles" e escolha o botão (Formulário) na seção "Controles de Formulário".
+    Desenhe o botão na planilha.
+    Quando a janela "Atribuir Macro" aparecer, clique em "Nova" para criar uma nova macro.
+    No Editor do VBA, digite o código para abrir o UserForm:
+
+vba
+
+Sub AbrirUserForm()
+    ' Exibir o UserForm ao clicar no botão
+    SeuUserForm.Show
+End Sub
+
+Substitua "SeuUserForm" pelo nome real do seu UserForm.
+
+    Volte para a janela "Atribuir Macro" e selecione a macro recém-criada.
+    Clique em "OK" para associar a macro ao botão.
+
+Agora, quando você clicar no botão na planilha, o UserForm deve ser exibido. Certifique-se de substituir "SeuUserForm" pelo nome real do seu formulário na planilha.
