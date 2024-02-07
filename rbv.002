@@ -1,0 +1,197 @@
+
+Private Sub CommandButton1_Click() ' Inserir
+    Dim ws As Worksheet
+    Dim lastRow As Long
+    Dim countOccurrences As Long
+    Dim searchRange As Range
+    Dim targetValue As String
+
+    ' Definir a planilha onde serão inseridos os dados
+    Set ws = ThisWorkbook.Sheets("Planilha1")
+
+    ' Definir o valor a ser verificado (da TextBox1)
+    targetValue = TextBox1.Value
+
+    ' Encontrar a última linha preenchida na coluna A
+    lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row + 1
+
+    ' Verificar se o valor já foi inserido mais de duas vezes
+    Set searchRange = ws.Range("A2:A" & lastRow - 1)
+    countOccurrences = Application.WorksheetFunction.CountIf(searchRange, targetValue)
+
+    ' Verificar se todas as TextBoxes obrigatórias estão preenchidas
+    If TextBox1 <> "" And TextBox3 <> "" And TextBox9 <> "" And TextBox10 <> "" Then
+        If countOccurrences < 2 Then ' Verificar se o valor foi inserido menos de duas vezes
+            ' Verificar se TextBox2 está preenchida e TextBox7 está vazia
+            If TextBox2 <> "" And TextBox7 = "" Then
+                ' Verificar se as TextBoxes 4, 5 e 6 estão no formato de hora
+                If IsHora(TextBox4) And IsHora(TextBox5) And IsHora(TextBox6) Then
+                    ' Inserir dados nas células
+                    ws.Cells(lastRow, 1).Value = TextBox1.Value
+                    ws.Cells(lastRow, 2).Value = TextBox2.Value
+                    ws.Cells(lastRow, 3).Value = TextBox3.Value
+                    ws.Cells(lastRow, 4).Value = TextBox4.Value
+                    ws.Cells(lastRow, 5).Value = TextBox5.Value
+                    ws.Cells(lastRow, 6).Value = TextBox6.Value
+                    ws.Cells(lastRow, 7).Value = ""
+                    ws.Cells(lastRow, 8).Value = TextBox8.Value ' Se TextBox8 não for obrigatória, isso pode ficar assim
+                    ws.Cells(lastRow, 9).Value = TextBox9.Value
+                    ws.Cells(lastRow, 10).Value = TextBox10.Value
+
+                    ' Limpar as TextBoxes
+                    LimparTextBoxes
+
+                    MsgBox "Dados inseridos com sucesso!", vbInformation
+                Else
+                    MsgBox "Preencha corretamente as TextBoxes 4, 5 e 6 com valores de hora (HH:MM).", vbExclamation
+                End If
+            ' Verificar se TextBox7 está preenchida e TextBox2 está vazia
+            ElseIf TextBox7 <> "" And TextBox2 = "" Then
+                ' Verificar se as TextBoxes 4, 5 e 6 estão no formato de hora
+                If IsHora(TextBox4) And IsHora(TextBox5) And IsHora(TextBox6) Then
+                    ' Inserir dados nas células
+                    ws.Cells(lastRow, 1).Value = TextBox1.Value
+                    ws.Cells(lastRow, 2).Value = ""
+                    ws.Cells(lastRow, 3).Value = TextBox3.Value
+                    ws.Cells(lastRow, 4).Value = TextBox4.Value
+                    ws.Cells(lastRow, 5).Value = TextBox5.Value
+                    ws.Cells(lastRow, 6).Value = TextBox6.Value
+                    ws.Cells(lastRow, 7).Value = TextBox7.Value
+                    ws.Cells(lastRow, 8).Value = TextBox8.Value ' Se TextBox8 não for obrigatória, isso pode ficar assim
+                    ws.Cells(lastRow, 9).Value = TextBox9.Value
+                    ws.Cells(lastRow, 10).Value = TextBox10.Value
+
+                    ' Limpar as TextBoxes
+                    LimparTextBoxes
+
+                    MsgBox "Dados inseridos com sucesso!", vbInformation
+                Else
+                    MsgBox "Preencha corretamente as TextBoxes 4, 5 e 6 com valores de hora (HH:MM).", vbExclamation
+                End If
+            Else
+                MsgBox "Preencha corretamente se você foi o analista principal ou retorno de email.", vbExclamation
+            End If
+        Else
+            MsgBox "O número do caso, já foi repetido mais de duas vezes.", vbExclamation
+        End If
+    Else
+        MsgBox "Preencha todas as informações obrigatórias.", vbExclamation
+    End If
+End Sub
+
+
+
+Function IsHora(tb As MSForms.TextBox) As Boolean
+    ' Verificar se o valor da TextBox está no formato de hora (HH:MM)
+    On Error Resume Next
+    Dim TestTime As Date
+    TestTime = CDate(tb.Value)
+    If Err.Number = 0 Then
+        IsHora = True
+    Else
+        IsHora = False
+    End If
+    On Error GoTo 0
+End Function
+
+Private Sub CommandButton2_Click() ' Consultar
+    Dim ws As Worksheet
+    Dim lastRow As Long
+
+    ' Definir a planilha onde os dados foram inseridos
+    Set ws = ThisWorkbook.Sheets("Planilha1")
+
+    ' Encontrar a última linha preenchida na coluna A
+    lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
+
+    ' Verificar se há dados na planilha
+    If lastRow > 1 Then
+        ' Exibir os dados na consulta
+        TextBox1.Value = ws.Cells(lastRow, 1).Value
+        TextBox2.Value = ws.Cells(lastRow, 2).Value
+        TextBox3.Value = ws.Cells(lastRow, 3).Value
+        TextBox4.Value = Format(ws.Cells(lastRow, 4).Value, "hh:mm")
+        TextBox5.Value = Format(ws.Cells(lastRow, 5).Value, "hh:mm")
+        TextBox6.Value = Format(ws.Cells(lastRow, 6).Value, "hh:mm")
+        TextBox7.Value = ws.Cells(lastRow, 7).Value
+        TextBox8.Value = ws.Cells(lastRow, 8).Value
+        TextBox9.Value = ws.Cells(lastRow, 9).Value
+        TextBox10.Value = ws.Cells(lastRow, 10).Value
+    Else
+        MsgBox "Não há dados na planilha.", vbInformation
+    End If
+End Sub
+
+
+
+Private Sub CommandButton3_Click() ' Alterar
+    Dim ws As Worksheet
+    Dim searchValue As String
+    Dim foundCell As Range
+
+    ' Definir a planilha onde serão consultados e alterados os dados
+    Set ws = ThisWorkbook.Sheets("Planilha1")
+
+    ' Verificar se o valor existe na coluna A
+    searchValue = TextBox1.Value
+    Set foundCell = ws.Columns(1).Find(What:=searchValue, LookIn:=xlValues, LookAt:=xlWhole)
+
+    If Not foundCell Is Nothing Then ' Se o valor existe, alterar os dados
+        Dim rowIndex As Long
+        rowIndex = foundCell.Row
+
+        ' Alterar os dados nas células correspondentes
+        ws.Cells(rowIndex, 2).Value = TextBox2.Value
+        ws.Cells(rowIndex, 3).Value = TextBox3.Value
+        ws.Cells(rowIndex, 4).Value = TextBox4.Value
+        ws.Cells(rowIndex, 5).Value = TextBox5.Value
+        ws.Cells(rowIndex, 6).Value = TextBox6.Value
+        ws.Cells(rowIndex, 7).Value = TextBox7.Value
+        ws.Cells(rowIndex, 8).Value = TextBox8.Value
+        ws.Cells(rowIndex, 9).Value = TextBox9.Value
+        ws.Cells(rowIndex, 10).Value = TextBox10.Value
+        
+        ' Inserir novos dados se TextBox11 e TextBox12 estiverem preenchidas
+        If TextBox11.Value <> "" And TextBox12.Value <> "" Then
+            ' Inserir novos dados nas últimas colunas da linha consultada
+            ws.Cells(rowIndex, 11).Value = TextBox11.Value
+            ws.Cells(rowIndex, 12).Value = TextBox12.Value
+            
+            ' Limpar TextBoxes 11 e 12 após a inserção
+            TextBox11.Value = ""
+            TextBox12.Value = ""
+        End If
+
+        ' Limpar as TextBoxes
+        LimparTextBoxes
+
+        MsgBox "Dados alterados com sucesso!", vbInformation
+    Else
+        MsgBox "Número não encontrado.", vbExclamation
+    End If
+End Sub
+
+
+
+Private Sub LimparTextBoxes()
+    ' Limpar todas as TextBoxes
+    Dim ctrl As Control
+    For Each ctrl In Me.Controls
+        If TypeName(ctrl) = "TextBox" Then
+            ctrl.Value = ""
+        End If
+    Next ctrl
+End Sub
+
+
+Private Sub CommandButton4_Click()
+
+End Sub
+
+Private Sub Label10_Click()
+
+End Sub
+
+Private Sub Label2_Click()
+
+End Sub
